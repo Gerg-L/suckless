@@ -1,18 +1,25 @@
-{ lib, stdenv, fetchurl, libX11, libXinerama, libXft, writeText }:
-
+{
+  lib,
+  stdenv,
+  fetchurl,
+  libX11,
+  libXinerama,
+  libXft,
+  writeText,
+}:
 stdenv.mkDerivation rec {
   pname = "dwm";
   version = "6.4";
 
   src = ./dwm;
 
-  buildInputs = [ libX11 libXinerama libXft ];
+  buildInputs = [libX11 libXinerama libXft];
 
   prePatch = ''
     sed -i "s@/usr/local@$out@" config.mk
   '';
 
-  makeFlags = [ "CC=${stdenv.cc.targetPrefix}cc" ];
+  makeFlags = ["CC=${stdenv.cc.targetPrefix}cc"];
 
   meta = with lib; {
     homepage = "https://dwm.suckless.org/";
@@ -27,8 +34,7 @@ stdenv.mkDerivation rec {
       tags.
     '';
     license = licenses.mit;
-    maintainers = with maintainers; [ viric neonfuz ];
+    maintainers = with maintainers; [viric neonfuz];
     platforms = platforms.all;
   };
 }
-
