@@ -12,6 +12,7 @@ static const double activeopacity   = 1.0f;     /* Window opacity when it's focu
 static const double inactiveopacity = 0.875f;   /* Window opacity when it's inactive (0 <= opacity <= 1) */
 static       Bool bUseOpacity       = True;     /* Starts with opacity on any unfocused windows */
 static const int user_bh            = 0;        /* 0 means that dwm will calculate bar height, >= 1 means dwm willcalculate bar height, >= 1 means dwm will user_bh as bar height */
+static const int barwidth           = 250;
 static const int focusonwheel       = 0;
 static const int vertpad            = 10;       /* vertical padding of bar */
 static const int sidepad            = 10;       /* horizontal padding of bar */
