@@ -1323,8 +1323,8 @@ xmakeglyphfontspecs(XftGlyphFontSpec *specs, const Glyph *glyphs, int len, int x
 		if (glyphidx) {
 			specs[numspecs].font = font->match;
 			specs[numspecs].glyph = glyphidx;
-			specs[numspecs].x = (short)xp;
-			specs[numspecs].y = (short)yp;
+			specs[numspecs].x = (short)xp + cxoffset;
+			specs[numspecs].y = (short)yp + cyoffset;
 			xp += runewidth;
 			numspecs++;
 			continue;
