@@ -2047,8 +2047,8 @@ updatebars(void)
 	for (m = mons; m; m = m->next) {
 		if (m->barwin)
 			continue;
-		m->barwin = XCreateWindow(dpy, root, m->wx + sp, m->by + vp, barwidth, bh, 0, depth,
-		                          InputOutput, visual,
+      m->barwin = XCreateWindow(dpy, root, m->wx + sp, m->by + vp, barwidth, bh, 0, depth,
+                              InputOutput, visual,
 		                          CWOverrideRedirect|CWBackPixel|CWBorderPixel|CWColormap|CWEventMask, &wa);
  		XDefineCursor(dpy, m->barwin, cursor[CurNormal]->cursor);
 		XDefineCursor(dpy, m->barwin, cursor[CurNormal]->cursor);
