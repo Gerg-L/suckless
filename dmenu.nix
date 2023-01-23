@@ -4,7 +4,7 @@ stdenv.mkDerivation rec {
   pname = "dmenu";
   version = "5.2";
 
-  src = ./dmenu
+  src = ./dmenu;
 
   buildInputs = [ libX11 libXinerama zlib libXft ];
 
