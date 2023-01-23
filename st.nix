@@ -10,6 +10,8 @@
   ncurses,
   writeText,
   nixosTests,
+  xorg,
+  harfbuzz
 }:
 stdenv.mkDerivation (finalAttrs: {
   pname = "st";

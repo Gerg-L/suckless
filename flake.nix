@@ -21,7 +21,7 @@
       st = pkgs.${system}.callPackage ./st.nix {};
     });
     overlays = {
-      suckless = _: prev: {
+      all = _: prev: {
         dwm = self.packages.${prev.system}.dwm;
         st = self.packages.${prev.system}.st;
       };
