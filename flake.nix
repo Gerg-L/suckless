@@ -19,11 +19,13 @@
     packages = genSystems (system: rec {
       dwm = pkgs.${system}.callPackage ./dwm.nix {};
       st = pkgs.${system}.callPackage ./st.nix {};
+      dmenu = pkgs.${system}.callPackage ./dmenu.nix {};
     });
     overlays = {
       all = _: prev: {
         dwm = self.packages.${prev.system}.dwm;
         st = self.packages.${prev.system}.st;
+        dmenu = self.packages.${prev.system}.dmenu;
       };
     };
   };
