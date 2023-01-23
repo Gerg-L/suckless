@@ -76,12 +76,14 @@ static const Layout layouts[] = {
 /* commands */
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
 static const char *dmenucmd[] = { "dmenu_run", "-fn", dmenufont, "-nb", col_gray1, "-nf", col_gray3, "-sb", col_cyan, "-sf", col_gray1, NULL };
+static const char *searchcmd[] = {"/bin/sh", "-c", "DMENU=$(echo -n | dmenu -p \"search\" -i -fn \"monospace:size=12\" -nb \"#000000\" -nf \"#a1aab8\" -sb \"#80a0ff\" -sf \"#000000\"); [ -z $DMENU ] && exit || librewolf \"searx.org/search?q=$DMENU\"", NULL };
 static const char *termcmd[]  = { "st", NULL };
 
 #include "movestack.c"
 static const Key keys[] = {
 	/* modifier                     key        function        argument */
 	{ MODKEY,                       XK_p,      spawn,          {.v = dmenucmd } },
+	{ MODKEY,                       XK_s,      spawn,          {.v = searchcmd } },
 	{ MODKEY|ShiftMask,             XK_Return, spawn,          {.v = termcmd } },
 	{ MODKEY,                       XK_b,      togglebar,      {0} },
 	{ MODKEY,                       XK_j,      focusstack,     {.i = +1 } },
@@ -102,7 +104,7 @@ static const Key keys[] = {
  	{ MODKEY|ShiftMask,             XK_f,      togglefullscr,  {0} },
  	{ MODKEY,                       XK_f,      fullscreen,     {0} },
 	{ MODKEY|ShiftMask,             XK_space,  togglefloating, {0} },
-  { MODKEY,                       XK_s,      togglesticky,   {0} },
+  { MODKEY|ShiftMask,             XK_s,      togglesticky,   {0} },
 	{ MODKEY,                       XK_0,      view,           {.ui = ~0 } },
 	{ MODKEY|ShiftMask,             XK_0,      tag,            {.ui = ~0 } },
 	{ MODKEY,                       XK_comma,  focusmon,       {.i = -1 } },
