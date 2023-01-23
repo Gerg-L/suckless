@@ -20,5 +20,11 @@
       dwm = pkgs.${system}.callPackage ./dwm.nix {};
       st = pkgs.${system}.callPackage ./st.nix {};
     });
+    overlays = {
+      suckless = _: prev: {
+        dwm = self.packages.${prev.system}.dwm;
+        st = self.packages.${prev.system}.st;
+      };
+    };
   };
 }
