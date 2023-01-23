@@ -75,8 +75,8 @@ static const Layout layouts[] = {
 
 /* commands */
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
-static const char *dmenucmd[] = { "dmenu_run", "-fn", dmenufont, "-nb", col_gray1, "-nf", col_gray3, "-sb", col_cyan, "-sf", col_gray1, NULL };
-static const char *searchcmd[] = {"/bin/sh", "-c", "DMENU=$(echo -n | dmenu -p \"search\" -i -fn \"monospace:size=12\" -nb \"#000000\" -nf \"#a1aab8\" -sb \"#80a0ff\" -sf \"#000000\"); [ -z $DMENU ] && exit || librewolf \"searx.org/search?q=$DMENU\"", NULL };
+static const char *dmenucmd[] = { "dmenu_run", "-c", "-l", "10", "-fn", dmenufont, "-nb", col_gray1, "-nf", col_gray3, "-sb", col_cyan, "-sf", col_gray1, NULL };
+static const char *searchcmd[] = {"/bin/sh", "-c", "DMENU=$(echo -n | dmenu -p \"search\" -i -c -fn \"monospace:size=12\" -nb \"#000000\" -nf \"#a1aab8\" -sb \"#80a0ff\" -sf \"#000000\"); [ -z $DMENU ] && exit || librewolf \"searx.org/search?q=$DMENU\"", NULL };
 static const char *termcmd[]  = { "st", NULL };
 
 #include "movestack.c"

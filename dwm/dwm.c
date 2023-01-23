@@ -1264,7 +1264,7 @@ quit(const Arg *arg)
 void
 quitprompt(const Arg *arg)
 {
-  FILE *pp = popen("echo \"yes\nno\nrestart\" | dmenu -i -p \"Quit DWM?\" -fn \"monospace:size=12\" -nb \"#000000\" -nf \"#a1aab8\" -sb \"#80a0ff\" -sf \"#000000\"", "r");
+  FILE *pp = popen("echo \"yes\nno\nrestart\" | dmenu -c -i -p \"Quit DWM?\" -fn \"monospace:size=12\" -nb \"#000000\" -nf \"#a1aab8\" -sb \"#80a0ff\" -sf \"#000000\"", "r");
 	if(pp != NULL) {
 		char buf[1024];
 		if (fgets(buf, sizeof(buf), pp) == NULL) {
