@@ -11,7 +11,7 @@
   writeText,
   nixosTests,
   xorg,
-  harfbuzz
+  harfbuzz,
 }:
 stdenv.mkDerivation (finalAttrs: {
   pname = "st";
