@@ -5,7 +5,7 @@
  *
  * font: see http://freedesktop.org/software/fontconfig/fontconfig-user.html
  */
-static char *font = "Overpass Mono:pixelsize=13:autohint=true";
+static char *font = "monospace:pixelsize=13:autohint=true";
 static int borderpx = 0;
 
 /*
