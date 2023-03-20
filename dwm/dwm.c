@@ -433,9 +433,15 @@ buttonpress(XEvent *e)
 	}
 	if (ev->window == selmon->barwin) {
 		i = x = 0;
-		do
-			x += bh;
-		while (ev->x >= x && ++i < LENGTH(tags));
+		unsigned int occ = 0;
+		for(c = m->clients; c; c=c->next)
+			occ |= c->tags;
+		do {
+			/* Do not reserve space for vacant tags */
+			if (!(occ & 1 << i || m->tagset[m->seltags] & 1 << i))
+				continue;
+      x += bh;
+    } while (ev->x >= x && ++i < LENGTH(tags));
 		if (i < LENGTH(tags)) {
 			click = ClkTagBar;
 			arg.ui = 1 << i;
@@ -721,13 +727,15 @@ drawbar(Monitor *m)
 	}
 	x = 0;
 	for (i = 0; i < LENGTH(tags); i++) {
+		/* Do not draw vacant tags */
+		if(!(occ & 1 << i || m->tagset[m->seltags] & 1 << i))
+			continue;
 		w = bh;
 		drw_setscheme(drw, scheme[m->tagset[m->seltags] & 1 << i ? SchemeSel : SchemeNorm]);
 		drw_text(drw, x, 0, bh, bh, 0, "", urg & 1 << i);
-		if (occ & 1 << i)
-			drw_rect(drw, x+boxw,boxw, w-boxw*2, w-boxw*2,
-				m == selmon && selmon->sel && selmon->sel->tags & 1 << i,
-				urg & 1 << i);
+		drw_rect(drw, x+boxw,boxw, w-boxw*2, w-boxw*2,
+ 				m == selmon && selmon->sel && selmon->sel->tags & 1 << i,
+ 				urg & 1 << i);
 		x += w;
 	}
 	w = TEXTW(m->ltsymbol);
