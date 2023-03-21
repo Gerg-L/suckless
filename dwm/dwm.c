@@ -190,7 +190,7 @@ static void movemouse(const Arg *arg);
 static Client *nexttiled(Client *c);
 static void pop(Client *c);
 static void propertynotify(XEvent *e);
-static void quit(const Arg *arg);
+static void restart(const Arg *arg);
 static Monitor *recttomon(int x, int y, int w, int h);
 static void reorganizetags(const Arg *arg);
 static void resize(Client *c, int x, int y, int w, int h, int interact);
@@ -1254,7 +1254,7 @@ propertynotify(XEvent *e)
 }
 
 void
-quit(const Arg *arg)
+restart(const Arg *arg)
 {
 	running = 0;
 }
