@@ -5,8 +5,8 @@
  *
  * font: see http://freedesktop.org/software/fontconfig/fontconfig-user.html
  */
-static char *font = "monospace:pixelsize=13:autohint=true";
-static int borderpx = 0;
+static char *font = "Liberation Mono:pixelsize=12:antialias=true:autohint=true";
+static int borderpx = 2;
 
 /*
  * What program is execed by st depends of these precedence rules:
@@ -28,9 +28,6 @@ char *vtiden = "\033[?6c";
 /* Kerning / character bounding-box multipliers */
 static float cwscale = 1.0;
 static float chscale = 1.0;
-/* Character rendering offsets in pixels */
-static short cxoffset = 0;
-static short cyoffset = 0;
 
 /*
  * word delimiter string
@@ -63,24 +60,12 @@ static double maxlatency = 33;
  * blinking timeout (set to 0 to disable blinking) for the terminal blinking
  * attribute.
  */
-static unsigned int blinktimeout = 0;
+static unsigned int blinktimeout = 800;
 
 /*
  * thickness of underline and bar cursors
  */
 static unsigned int cursorthickness = 2;
-
-/*
- * 1: render most of the lines/blocks characters without using the font for
- *    perfect alignment between cells (U2500 - U259F except dashes/diagonals).
- *    Bold affects lines thickness if boxdraw_bold is not 0. Italic is ignored.
- * 0: disable (render all U25XX glyphs normally from the font).
- */
-const int boxdraw = 1;
-const int boxdraw_bold = 1;
-
-/* braille (U28XX):  1: render as adjacent "pixels",  0: use font */
-const int boxdraw_braille = 0;
 
 /*
  * bell volume. It must be a value between -100 and 100. Use 0 for disabling
@@ -108,38 +93,35 @@ char *termname = "st-256color";
  */
 unsigned int tabspaces = 8;
 
-/* bg opacity */
-float alpha = 0.9, alphaUnfocused = 0.6;
-
 /* Terminal colors (16 first used in escape sequence) */
 static const char *colorname[] = {
 	/* 8 normal colors */
-  [0] = "#323437",
-	[1] = "#ff5454",
-	[2] = "#8cc85f",
-	[3] = "#e3c78a",
-	[4] = "#80a0ff",
-	[5] = "#d183e8",
-	[6] = "#79dac8",
-	[7] = "#a1aab8",
+	"black",
+	"red3",
+	"green3",
+	"yellow3",
+	"blue2",
+	"magenta3",
+	"cyan3",
+	"gray90",
 
 	/* 8 bright colors */
-	[8] = "#7c8f8f",
-	[9] = "#ff5189",
-	[10] = "#36c692",
-	[11] = "#bfbf97",
-	[12] = "#74b2ff",
-	[13] = "#ae81ff",
-	[14] = "#85dc85",
-	[15] = "#e2637f",
- 
+	"gray50",
+	"red",
+	"green",
+	"yellow",
+	"#5c5cff",
+	"magenta",
+	"cyan",
+	"white",
+
 	[255] = 0,
 
 	/* more colors can be added after 255 to use with DefaultXX */
-  [256] = "#282a36", 
-  [257] = "#f8f8f2",
-  [258] = "#eeeeee",
-  [259] = "#080808",
+	"#cccccc",
+	"#555555",
+	"gray90", /* default foreground colour */
+	"black", /* default background colour */
 };
 
 
@@ -149,9 +131,9 @@ static const char *colorname[] = {
  */
 unsigned int defaultfg = 258;
 unsigned int defaultbg = 259;
-unsigned int defaultcs = 257;
-static unsigned int defaultrcs = 256;
-unsigned int bg = 16, bgUnfocused = 16;
+unsigned int defaultcs = 256;
+static unsigned int defaultrcs = 257;
+
 /*
  * Default shape of cursor
  * 2: Block ("█")
@@ -159,7 +141,7 @@ unsigned int bg = 16, bgUnfocused = 16;
  * 6: Bar ("|")
  * 7: Snowman ("☃")
  */
-static unsigned int cursorshape = 6;
+static unsigned int cursorshape = 2;
 
 /*
  * Default columns and rows numbers
@@ -169,10 +151,11 @@ static unsigned int cols = 80;
 static unsigned int rows = 24;
 
 /*
- * Default shape of the mouse cursor
+ * Default colour and shape of the mouse cursor
  */
-
-static char* mouseshape = "xterm";
+static unsigned int mouseshape = XC_xterm;
+static unsigned int mousefg = 7;
+static unsigned int mousebg = 0;
 
 /*
  * Color used to display font attributes when fontconfig selected a font which
@@ -191,13 +174,8 @@ static uint forcemousemod = ShiftMask;
  * Internal mouse shortcuts.
  * Beware that overloading Button1 will disable the selection.
  */
-
-const unsigned int mousescrollincrement = 5;
-
 static MouseShortcut mshortcuts[] = {
 	/* mask                 button   function        argument       release */
-	{ XK_ANY_MOD,           Button4, kscrollup,      {.i = mousescrollincrement},		0, /* !alt */ -1 },
-	{ XK_ANY_MOD,           Button5, kscrolldown,    {.i = mousescrollincrement},		0, /* !alt */ -1 },
 	{ XK_ANY_MOD,           Button2, selpaste,       {.i = 0},      1 },
 	{ ShiftMask,            Button4, ttysend,        {.s = "\033[5;2~"} },
 	{ XK_ANY_MOD,           Button4, ttysend,        {.s = "\031"} },
@@ -223,8 +201,6 @@ static Shortcut shortcuts[] = {
 	{ TERMMOD,              XK_Y,           selpaste,       {.i =  0} },
 	{ ShiftMask,            XK_Insert,      selpaste,       {.i =  0} },
 	{ TERMMOD,              XK_Num_Lock,    numlock,        {.i =  0} },
-	{ ShiftMask,            XK_Page_Up,     kscrollup,      {.i = -1} },
-	{ ShiftMask,            XK_Page_Down,   kscrolldown,    {.i = -1} },
 };
 
 /*
@@ -496,27 +472,3 @@ static char ascii_printable[] =
 	" !\"#$%&'()*+,-./0123456789:;<=>?"
 	"@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_"
 	"`abcdefghijklmnopqrstuvwxyz{|}~";
-
-/**
- * Undercurl style. Set UNDERCURL_STYLE to one of the available styles.
- *
- * Curly: Dunno how to draw it *shrug*
- *  _   _   _   _
- * ( ) ( ) ( ) ( )
- *	 (_) (_) (_) (_)
- *
- * Spiky:
- * /\  /\   /\	/\
- *   \/  \/	  \/
- *
- * Capped:
- *	_     _     _
- * / \   / \   / \
- *    \_/   \_/
- */
-// Available styles
-#define UNDERCURL_CURLY 0
-#define UNDERCURL_SPIKY 1
-#define UNDERCURL_CAPPED 2
-// Active style
-#define UNDERCURL_STYLE UNDERCURL_CURLY
