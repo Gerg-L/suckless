@@ -1,7 +1,6 @@
 {
   lib,
   stdenv,
-  fetchurl,
   libX11,
   libXinerama,
   libXft,

@@ -1,19 +1,16 @@
 {
   lib,
   stdenv,
-  fetchurl,
   pkg-config,
   fontconfig,
   freetype,
   libX11,
   libXft,
   ncurses,
-  writeText,
   nixosTests,
   xorg,
-  harfbuzz,
 }:
-stdenv.mkDerivation (finalAttrs: {
+stdenv.mkDerivation {
   pname = "st";
   version = "0.9";
 
@@ -36,7 +33,6 @@ stdenv.mkDerivation (finalAttrs: {
     libXft
     #required by patches
     xorg.libXcursor
-    harfbuzz
   ];
 
   preInstall = ''
@@ -54,4 +50,4 @@ stdenv.mkDerivation (finalAttrs: {
     maintainers = with maintainers; [andsild];
     platforms = platforms.unix;
   };
-})
+}

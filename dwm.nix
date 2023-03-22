@@ -1,11 +1,9 @@
 {
   lib,
   stdenv,
-  fetchurl,
   libX11,
   libXinerama,
   libXft,
-  writeText,
 }:
 stdenv.mkDerivation rec {
   pname = "dwm";
