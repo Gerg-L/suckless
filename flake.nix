@@ -2,29 +2,34 @@
   description = "My personal suckless configurations";
 
   inputs = {
-    nixpkgs.url = github:NixOS/nixpkgs?ref=nixos-unstable;
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
   };
   outputs = {
     self,
     nixpkgs,
   }: let
-    supportedSystems = [
-      "aarch64-linux"
-      "x86_64-linux"
-    ];
-    genSystems = nixpkgs.lib.genAttrs supportedSystems;
-    pkgs = genSystems (system: import nixpkgs {inherit system;});
-  in {
-    formatter = genSystems (system: pkgs.${system}.alejandra);
-    packages = genSystems (system: rec {
-      dwm = pkgs.${system}.callPackage ./dwm.nix {};
-      st = pkgs.${system}.callPackage ./st.nix {};
-      dmenu = pkgs.${system}.callPackage ./dmenu.nix {};
+    lib = nixpkgs.lib;
+    withSystem = f:
+      lib.foldAttrs lib.mergeAttrs {}
+      (map (s: lib.mapAttrs (_: v: {${s} = v;}) (f s))
+        ["x86_64-linux" "x86_64-darwin" "aarch64-linux" "aarch64-darwin"]);
+  in
+    {
+      overlay = _: final: {
+        dwm = self.packages.${final.system}.dwm;
+        st = self.packages.${final.system}.st;
+        dmenu = self.packages.${final.system}.dmenu;
+      };
+    }
+    // withSystem (system: let
+      pkgs = nixpkgs.legacyPackages.${system};
+    in {
+      formatter = pkgs.alejandra;
+
+      packages = {
+        dwm = pkgs.callPackage ./dwm.nix {};
+        st = pkgs.callPackage ./st.nix {};
+        dmenu = pkgs.callPackage ./dmenu.nix {};
+      };
     });
-    overlay = _: prev: {
-      dwm = self.packages.${prev.system}.dwm;
-      st = self.packages.${prev.system}.st;
-      dmenu = self.packages.${prev.system}.dmenu;
-    };
-  };
 }
