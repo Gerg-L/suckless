@@ -8,18 +8,14 @@
     self,
     nixpkgs,
   }: let
-    lib = nixpkgs.lib;
+    inherit (nixpkgs) lib;
     withSystem = f:
       lib.foldAttrs lib.mergeAttrs {}
       (map (s: lib.mapAttrs (_: v: {${s} = v;}) (f s))
         ["x86_64-linux" "x86_64-darwin" "aarch64-linux" "aarch64-darwin"]);
   in
     {
-      overlay = _: final: {
-        dwm = self.packages.${final.system}.dwm;
-        st = self.packages.${final.system}.st;
-        dmenu = self.packages.${final.system}.dmenu;
-      };
+      overlay = _: final: self.packages.${final.system};
     }
     // withSystem (system: let
       pkgs = nixpkgs.legacyPackages.${system};
