@@ -6,7 +6,7 @@
   libXft,
   zlib,
 }:
-stdenv.mkDerivation rec {
+stdenv.mkDerivation {
   pname = "dmenu";
   version = "5.2";
 

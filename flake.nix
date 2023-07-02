@@ -13,7 +13,8 @@
     withSystem (system: let
       pkgs = nixpkgs.legacyPackages.${system};
     in {
-      overlay = final: _: self.packages.${final.system};
+      overlays.default = final: _: self.packages.${final.system};
+      overlay = self.overlays.default;
 
       formatter.${system} = pkgs.alejandra;
 

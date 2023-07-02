@@ -5,7 +5,7 @@
   libXinerama,
   libXft,
 }:
-stdenv.mkDerivation rec {
+stdenv.mkDerivation {
   pname = "dwm";
   version = "6.4";
 
