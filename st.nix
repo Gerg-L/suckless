@@ -1,5 +1,4 @@
 {
-  lib,
   stdenv,
   pkg-config,
   fontconfig,
@@ -43,11 +42,5 @@ stdenv.mkDerivation {
 
   passthru.tests.test = nixosTests.terminal-emulators.st;
 
-  meta = with lib; {
-    homepage = "https://st.suckless.org/";
-    description = "Simple Terminal for X from Suckless.org Community";
-    license = licenses.mit;
-    maintainers = with maintainers; [andsild];
-    platforms = platforms.unix;
-  };
+  meta.mainProgram = "st";
 }
