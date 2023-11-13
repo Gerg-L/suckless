@@ -17,9 +17,7 @@ stdenv.mkDerivation {
 
   strictDeps = true;
 
-  makeFlags = [
-    "PKG_CONFIG=${stdenv.cc.targetPrefix}pkg-config"
-  ];
+  makeFlags = [ "PKG_CONFIG=${stdenv.cc.targetPrefix}pkg-config" ];
 
   nativeBuildInputs = [
     pkg-config
@@ -38,7 +36,7 @@ stdenv.mkDerivation {
     export TERMINFO=$out/share/terminfo
   '';
 
-  installFlags = ["PREFIX=$(out)"];
+  installFlags = [ "PREFIX=$(out)" ];
 
   passthru.tests.test = nixosTests.terminal-emulators.st;
 
