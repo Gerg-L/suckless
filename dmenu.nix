@@ -11,6 +11,8 @@ stdenv.mkDerivation {
 
   src = ./dmenu;
 
+  strictDeps = true;
+
   buildInputs = [
     libX11
     libXinerama
@@ -18,16 +20,7 @@ stdenv.mkDerivation {
     libXft
   ];
 
-  postPatch = ''
-    sed -ri -e 's!\<(dmenu|dmenu_path|stest)\>!'"$out/bin"'/&!g' dmenu_run
-    sed -ri -e 's!\<stest\>!'"$out/bin"'/&!g' dmenu_path
-  '';
-
-  preConfigure = ''
-    sed -i "s@PREFIX = /usr/local@PREFIX = $out@g" config.mk
-  '';
-
-  makeFlags = [ "CC:=$(CC)" ];
+  installFlags = [ "PREFIX=$(out)" ];
 
   meta.mainProgram = "dmenu_run";
 }

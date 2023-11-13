@@ -2,7 +2,7 @@
   inputs.nixpkgs.url = "github:NixOS/nixpkgs?ref=nixos-unstable";
 
   outputs =
-    { self, nixpkgs }:
+    { nixpkgs, ... }:
     let
       inherit (nixpkgs) lib;
       withSystem =
@@ -15,26 +15,17 @@
             "aarch64-darwin"
           ]
         );
+      mkPackages = pkgs: {
+        dwm = pkgs.callPackage ./dwm.nix { };
+        st = pkgs.callPackage ./st.nix { };
+        dmenu = pkgs.callPackage ./dmenu.nix { };
+      };
     in
     withSystem (
-      system:
-      let
-        pkgs = nixpkgs.legacyPackages.${system};
-      in
-      {
-        overlays.default = final: _: self.packages.${final.system};
-        overlay = self.overlays.default;
+      system: {
+        overlays.default = final: _: mkPackages final;
 
-        formatter.${system} = pkgs.alejandra;
-
-        packages.${system} = {
-          dwm = pkgs.callPackage ./dwm.nix { };
-          st = pkgs.callPackage ./st.nix { };
-          dmenu = pkgs.callPackage ./dmenu.nix { };
-        };
-        devShells.${system}.default = pkgs.mkShell {
-          inputsFrom = lib.attrValues self.packages.${system};
-        };
+        packages.${system} = mkPackages nixpkgs.legacyPackages.${system};
       }
     );
 }

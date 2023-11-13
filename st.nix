@@ -1,13 +1,12 @@
 {
   stdenv,
-  pkg-config,
   fontconfig,
   freetype,
   libX11,
+  libXcursor,
   libXft,
   ncurses,
-  nixosTests,
-  xorg,
+  pkg-config,
 }:
 stdenv.mkDerivation {
   pname = "st";
@@ -17,28 +16,22 @@ stdenv.mkDerivation {
 
   strictDeps = true;
 
-  makeFlags = [ "PKG_CONFIG=${stdenv.cc.targetPrefix}pkg-config" ];
-
   nativeBuildInputs = [
-    pkg-config
-    ncurses
-    fontconfig
     freetype
-  ];
-  buildInputs = [
-    libX11
-    libXft
-    #required by patches
-    xorg.libXcursor
+    ncurses
+    pkg-config
   ];
 
-  preInstall = ''
-    export TERMINFO=$out/share/terminfo
-  '';
+  buildInputs = [
+    fontconfig
+    libX11
+    libXcursor
+    libXft
+  ];
 
   installFlags = [ "PREFIX=$(out)" ];
 
-  passthru.tests.test = nixosTests.terminal-emulators.st;
+  env.TERMINFO = "${placeholder "out"}/share/terminfo";
 
   meta.mainProgram = "st";
 }

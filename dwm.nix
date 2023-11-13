@@ -10,17 +10,15 @@ stdenv.mkDerivation {
 
   src = ./dwm;
 
+  strictDeps = true;
+
   buildInputs = [
     libX11
     libXinerama
     libXft
   ];
 
-  prePatch = ''
-    sed -i "s@/usr/local@$out@" config.mk
-  '';
-
-  makeFlags = [ "CC=${stdenv.cc.targetPrefix}cc" ];
+  installFlags = [ "PREFIX=$(out)" ];
 
   meta.mainProgram = "dwm";
 }
