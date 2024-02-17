@@ -21,11 +21,9 @@
         dmenu = pkgs.callPackage ./dmenu.nix { };
       };
     in
-    withSystem (
-      system: {
-        overlays.default = final: _: mkPackages final;
+    withSystem (system: {
+      overlays.default = final: _: mkPackages final;
 
-        packages.${system} = mkPackages nixpkgs.legacyPackages.${system};
-      }
-    );
+      packages.${system} = mkPackages nixpkgs.legacyPackages.${system};
+    });
 }
