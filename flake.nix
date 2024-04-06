@@ -1,8 +1,13 @@
 {
-  inputs.nixpkgs.url = "github:NixOS/nixpkgs?ref=nixos-unstable";
+  inputs.nixpkgs = {
+    type = "github";
+    owner = "NixOS";
+    repo = "nixpkgs";
+    ref = "nixos-unstable";
+  };
 
   outputs =
-    { nixpkgs, ... }:
+    { nixpkgs, self }:
     let
       inherit (nixpkgs) lib;
       withSystem =
@@ -22,7 +27,11 @@
       };
     in
     withSystem (system: {
-      overlays.default = final: _: mkPackages final;
+      overlays = {
+        default = self.overlays.override;
+        override = final: _: mkPackages final;
+        insert = final: _: self.packages.${final.stdenv.hostPlatform.system};
+      };
 
       packages.${system} = mkPackages nixpkgs.legacyPackages.${system};
     });
